@@ -14,15 +14,25 @@ jobs:
     - uses: actions/checkout@v4
     
     # Cache the build artifacts and dependencies
-    - name: Cache Swift dependencies
+    - name: Cache Swift dependencies - HTTPS
       uses: actions/cache@v4.2.0
       with:
         path: |
           ~/.swiftpm
-          .build
-        key: ${{ runner.os }}-swift-${{ hashFiles('Package.swift') }}
+          https/.build
+        key: ${{ runner.os }}-https-swift-${{ hashFiles('https/Package.swift') }}
         restore-keys: |
-          ${{ runner.os }}-swift-
+          ${{ runner.os }}-https-swift-
+
+    - name: Cache Swift dependencies - INLINE
+      uses: actions/cache@v4.2.0
+      with:
+        path: |
+          ~/.swiftpm
+          inline/.build
+        key: ${{ runner.os }}-inline-swift-${{ hashFiles('inline/Package.swift') }}
+        restore-keys: |
+          ${{ runner.os }}-inline-swift-
     
     - name: Setup PostgreSQL
       uses: Harmon758/postgresql-action@v1.0.0
@@ -32,8 +42,14 @@ jobs:
         postgresql user: testing
         postgresql password: testing
 
-    - name: Build
-      run: swift build -v
+    - name: Build-HTTPS
+      run: cd https; swift build -v
 
-    - name: Run tests
-      run: swift test -v
+    - name: Build-INLINE
+      run: cd inline; swift build -v
+
+    - name: Run tests-HTTPS
+      run: cd https; swift test -v
+
+    - name: Run tests-INLINE
+      run: cd inline; swift test -v
