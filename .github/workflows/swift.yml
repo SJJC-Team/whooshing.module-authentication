@@ -1,0 +1,55 @@
+name: Swift
+
+on:
+  push:
+    branches: [ "develop" ]
+  pull_request:
+    branches: [ "develop" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-22.04
+
+    steps:
+    - uses: actions/checkout@v4
+    
+    # Cache the build artifacts and dependencies
+    - name: Cache Swift dependencies - HTTPS
+      uses: actions/cache@v4.2.0
+      with:
+        path: |
+          ~/.swiftpm
+          https/.build
+        key: ${{ runner.os }}-https-swift-${{ hashFiles('https/Package.swift') }}
+        restore-keys: |
+          ${{ runner.os }}-https-swift-
+
+    - name: Cache Swift dependencies - INLINE
+      uses: actions/cache@v4.2.0
+      with:
+        path: |
+          ~/.swiftpm
+          inline/.build
+        key: ${{ runner.os }}-inline-swift-${{ hashFiles('inline/Package.swift') }}
+        restore-keys: |
+          ${{ runner.os }}-inline-swift-
+    
+    - name: Setup PostgreSQL
+      uses: Harmon758/postgresql-action@v1.0.0
+      with:
+        postgresql version: 17.2
+        postgresql db: testing
+        postgresql user: testing
+        postgresql password: testing
+
+    - name: Build-HTTPS
+      run: cd https; swift build -v
+
+    - name: Build-INLINE
+      run: cd inline; swift build -v
+
+    - name: Run tests-HTTPS
+      run: cd https; swift test -v
+
+    - name: Run tests-INLINE
+      run: cd inline; swift test -v
