@@ -1,8 +1,9 @@
 import Vapor
-import Whooshing
+import WhooshingInline
 
-// configures your application
 public func configure(_ app: Application) async throws {
-    try await Application.configure(app, template: .inline)
+    try await Application.configure(app)
+    app.migrations.add(User.MIG())
+    try await app.autoMigrate()
     try routes(app)
 }
