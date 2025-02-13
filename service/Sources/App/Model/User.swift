@@ -6,6 +6,9 @@ import DataConvertable
 import Cryptos
 import ErrorHandle
 
+/// 数据库表 users 的映射类型
+/// 记录所有已注册的用户
+
 final class User: PGModel, @unchecked Sendable {
     static let name: String = "users"
     

@@ -6,6 +6,9 @@ import DataConvertable
 import Cryptos
 import ErrorHandle
 
+/// 数据库表 tokens 的映射类型
+/// 该 tokens 表记录用户口令和用户凭据的对照，用于用户认证查询
+
 final class Token: PGModel, @unchecked Sendable {
     static let name: String = "tokens"
     

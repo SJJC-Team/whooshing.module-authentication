@@ -4,9 +4,14 @@ import WhooshingInline
 import ErrorHandle
 import Cryptos
 
+/// 用户认证模块，实现
+/// - 用户注册
+/// - 用户登陆
+/// - 用户口令认证
+
 struct UserController: RouteCollection {
     enum Err: String, ErrList {
-        var domain: String { "woo.sys.user.controller.error" }
+        var domain: String { "woo.sys.authentication.service.user.controller.error" }
         case registerFailed = "注册失败"
         case loginFailed = "登陆失败"
         case authFailed = "验证失败"

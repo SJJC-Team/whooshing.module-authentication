@@ -14,7 +14,7 @@ import ErrorHandle
 @main
 enum Entrypoint {
     enum Err: String, ErrList {
-        var domain: String { "woo.sys.configurate.error" }
+        var domain: String { "woo.sys.template.configurate.error" }
         case illegalService = "不合法的服务模块"
     }
     
