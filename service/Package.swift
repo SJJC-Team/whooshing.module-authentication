@@ -20,7 +20,7 @@ let package = Package(
                 .product(name: "NIOPosix", package: "swift-nio"),
                 .product(name: "Whooshing", package: "whooshing.toolbox-basic"),
             ],
-            swiftSettings: swiftSettings + ["HTTPS", "API", "INLINE"].map { .define($0) }
+            swiftSettings: swiftSettings + ["HTTPS", "INLINE"].map { .define($0) }
         ),
         .testTarget(
             name: "AppTests",
