@@ -1,13 +1,13 @@
 {
-  "originHash" : "b934dfdd6a58c4b7e5afc26fb15c5311a596da39ac6071002db4a99180f0d641",
+  "originHash" : "75a5da1d9546afb03be8bcb99f18b7e948fd5e15ee9daac0a9771e39ec44c005",
   "pins" : [
     {
       "identity" : "async-http-client",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/swift-server/async-http-client.git",
       "state" : {
-        "revision" : "60fa3dcfc52d09ed0411e9c4bc99928bf63656bd",
-        "version" : "1.24.2"
+        "revision" : "b645ad40822b5c59ac92b758c5c17af054b5b01f",
+        "version" : "1.25.1"
       }
     },
     {
@@ -69,8 +69,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/vapor/postgres-nio.git",
       "state" : {
-        "revision" : "fd0e415a705c490499f983639b04f491a2ed9d99",
-        "version" : "1.23.0"
+        "revision" : "8d07f2049531a60c08b8dda7011a3ad8ac3c989b",
+        "version" : "1.24.0"
       }
     },
     {
@@ -96,8 +96,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/apple/swift-algorithms.git",
       "state" : {
-        "revision" : "f6919dfc309e7f1b56224378b11e28bab5bccc42",
-        "version" : "1.2.0"
+        "revision" : "87e50f483c54e6efd60e885f7f5aa946cee68023",
+        "version" : "1.2.1"
       }
     },
     {
@@ -141,8 +141,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/apple/swift-crypto.git",
       "state" : {
-        "revision" : "f2f3774fd116a305136b6866e5e7cb7dff39d8f2",
-        "version" : "3.10.1"
+        "revision" : "b828ba476ab068f0b00d6b41f92f364961b0f323",
+        "version" : "3.10.2"
       }
     },
     {
@@ -186,8 +186,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/apple/swift-nio.git",
       "state" : {
-        "revision" : "dff45738d84a53dbc8ee899c306b3a7227f54f89",
-        "version" : "2.80.0"
+        "revision" : "c51907a839e63ebf0ba2076bba73dd96436bd1b9",
+        "version" : "2.81.0"
       }
     },
     {
@@ -295,7 +295,7 @@
       "location" : "https://github.com/SJJC-Team/whooshing.toolbox-basic.git",
       "state" : {
         "branch" : "1.1.11-developer-clwang-test-inline-module",
-        "revision" : "0fe8993620eca487e9f494630ae1fee79280150f"
+        "revision" : "cdc78f65395536ea3a11069c13899a43d2634ad7"
       }
     }
   ],

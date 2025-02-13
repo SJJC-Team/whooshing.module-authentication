@@ -2,7 +2,7 @@
 import PackageDescription
 
 let package = Package(
-    name: "inline",
+    name: "service",
     platforms: [
        .macOS(.v13)
     ],
@@ -18,9 +18,9 @@ let package = Package(
                 .product(name: "Vapor", package: "whooshing-vapor"),
                 .product(name: "NIOCore", package: "swift-nio"),
                 .product(name: "NIOPosix", package: "swift-nio"),
-                .product(name: "WhooshingInline", package: "whooshing.toolbox-basic"),
+                .product(name: "Whooshing", package: "whooshing.toolbox-basic"),
             ],
-            swiftSettings: swiftSettings
+            swiftSettings: swiftSettings + ["HTTPS", "INLINE"].map { .define($0) }
         ),
         .testTarget(
             name: "AppTests",
