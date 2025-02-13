@@ -2,9 +2,13 @@ import Vapor
 import Logging
 import NIOCore
 import NIOPosix
-import NIOConcurrencyHelpers
 import Whooshing
 import ErrorHandle
+
+/// 该函数为入口函数，是整个 Vapor 服务的执行起始点
+/// 该函数根据环境变量(API, INLINE, HTTPS)分别设置服务类型，并进行初始化
+/// 不同服务的 Application 实例可以分别通过 Woo.api, Woo.inline, Woo.https 来取得
+/// 要对不同的实例进行额外配置，在 configure.swift 进行额外配置
 
 @main
 enum Entrypoint {
