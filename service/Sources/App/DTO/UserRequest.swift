@@ -33,3 +33,8 @@ struct TokenDTO: Content {
 extension Token {
     var DTO: TokenDTO { .init(credential: self.credential, token: self.token) }
 }
+
+struct TokenAuth: Content {
+    let credential: String
+    let tokenHashed: Data
+}

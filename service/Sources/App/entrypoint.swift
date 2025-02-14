@@ -68,8 +68,14 @@ enum Entrypoint {
                 try? await app.asyncShutdown()
                 throw error
             }
-            try await app.execute()
-            try await app.asyncShutdown()
+            Task.detached {
+                do {
+                    try await app.execute()
+                    try await app.asyncShutdown()
+                } catch {
+                    print("Error: \(error)")
+                }
+            }
         }
     }
 }

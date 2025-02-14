@@ -1,6 +1,7 @@
 import Vapor
 import Fluent
 import WhooshingInline
+import DataConvertable
 import ErrorHandle
 import Cryptos
 
@@ -52,18 +53,20 @@ struct UserController: RouteCollection {
         }
     }
     
-    // 验证口令，若成功，返回 Pass
-    @Sendable func authenticate(req: Request) async throws -> String {
+    // 验证口令，若成功，返回用户口令
+    @Sendable func authenticate(req: Request) async throws -> Crypto.Symm.Key {
         enum AuthErr: String, Error {
             case credentialNotExist = "用户凭据不存在"
             case credentialExpired = "用户凭据已过期"
             case tokenIncorrect = "用户口令不正确"
             case tokenInvalid = "用户口令无效"
+            case tokenLengthIncorrect = "用户口令长度不正确"
         }
         do {
-            let tokenDTO = try req.content.decode(TokenDTO.self)
+            let tokenAuth = try req.content.decode(TokenAuth.self)
+            guard tokenAuth.tokenHashed.count == 64 else { throw AuthErr.tokenLengthIncorrect }
             // 从数据库中查询用户凭据
-            guard let token = try await Token.query(on: req.db).filter(\.$credential == tokenDTO.credential).first() else { throw AuthErr.credentialNotExist }
+            guard let token = try await Token.query(on: req.db).filter(\.$credential == tokenAuth.credential).first() else { throw AuthErr.credentialNotExist }
             try await token.$user.load(on: req.db)
             // 检查是否有效
             guard token.valid == true else { throw AuthErr.tokenInvalid }
@@ -71,8 +74,11 @@ struct UserController: RouteCollection {
             let expireDate = token.createdAt.addingTimeInterval(TimeInterval(token.expireAfter * 60))
             guard Date.now < expireDate else { throw AuthErr.credentialExpired }
             // 检查口令是否正确
-            guard token.token == tokenDTO.token else { throw AuthErr.tokenIncorrect }
-            return "Pass"
+            let keyData = try Base64String(token.token).data()                              // 取得密钥的字节码
+            let key = Crypto.Symm.Key(data: keyData)                                        // 转为 AES 密钥类型
+            let authData = try Crypto.hash(Crypto.Symm.encrypt(keyData, key: key))          // 使用密钥本身加密密钥，并进行 Hash
+            guard authData == tokenAuth.tokenHashed else { throw AuthErr.tokenIncorrect }   // 比对 hash 之后的密钥是否一致
+            return key
         } catch let err {
             throw Err.authFailed.d(20004, (#file, #line)).subErr(err)
         }
