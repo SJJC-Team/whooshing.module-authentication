@@ -8,7 +8,7 @@ let package = Package(
     ],
     dependencies: [
         .package(url: "https://github.com/SJJC-Team/whooshing-vapor.git", branch: "main"),
-        .package(url: "https://github.com/SJJC-Team/whooshing.toolbox-basic.git", branch: "1.1.11-developer-clwang-test-inline-module"),
+        .package(url: "https://github.com/SJJC-Team/whooshing.toolbox-basic.git", branch: "1.1.11-developer-clwang-api-module"),
         .package(url: "https://github.com/apple/swift-nio.git", from: "2.65.0"),
     ],
     targets: [

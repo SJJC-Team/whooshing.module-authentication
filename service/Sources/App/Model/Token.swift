@@ -36,7 +36,7 @@ final class Token: PGModel, @unchecked Sendable {
     
     init(for userId: User.IDValue) throws {
         self.$user.id = userId
-        self.credential = try Crypto.randomDataGenerate(length: 16).base64EncodedString()
+        self.credential = Crypto.randomDataGenerate(length: 16).base64EncodedString()
         self.token = Crypto.Symm.makeKey().data().base64EncodedString()
         self.expireAfter = 7 * 24 * 60      // 7 天，以分钟为单位
     }

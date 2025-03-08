@@ -17,6 +17,24 @@
             "name": "Release App (inline)",
             "program": "${workspaceFolder:whooshing.module-authentication}/inline/.build/release/App",
             "preLaunchTask": "swift: Build Release App (inline)"
+        },
+        {
+            "type": "lldb",
+            "request": "launch",
+            "args": [],
+            "cwd": "${workspaceFolder:whooshing.module-authentication}/service",
+            "name": "Debug App (service)",
+            "program": "${workspaceFolder:whooshing.module-authentication}/service/.build/debug/App",
+            "preLaunchTask": "swift: Build Debug App (service)"
+        },
+        {
+            "type": "lldb",
+            "request": "launch",
+            "args": [],
+            "cwd": "${workspaceFolder:whooshing.module-authentication}/service",
+            "name": "Release App (service)",
+            "program": "${workspaceFolder:whooshing.module-authentication}/service/.build/release/App",
+            "preLaunchTask": "swift: Build Release App (service)"
         }
     ]
 }

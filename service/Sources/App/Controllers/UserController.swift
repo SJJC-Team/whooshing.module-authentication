@@ -1,6 +1,6 @@
 import Vapor
 import Fluent
-import WhooshingInline
+import Whooshing
 import DataConvertable
 import ErrorHandle
 import Cryptos

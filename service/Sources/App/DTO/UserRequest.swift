@@ -12,7 +12,7 @@ struct NewUser: Content, Validatable {
         user.email = self.email
         // 为用户创建一个用户加密密钥
         user.key = Crypto.Symm.makeKey().data()
-        user.salt = try Crypto.randomDataGenerate()
+        user.salt = Crypto.randomDataGenerate()
         // 对用户密码进行第二重加盐哈希
         let passwd = try Crypto.hash(Base64String(self.passwordHashed).data() + user.salt)
         user.hashedPasswd = passwd.base64EncodedString()
