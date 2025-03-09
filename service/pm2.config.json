@@ -1,9 +1,9 @@
 {
     "apps": [
         {
-            "name": "Whooshing.Module-Authentication",
-            "cwd": ".",
-            "script": "swift run"
+            "name": "whooshing.module-authentication",
+            "cwd": "./",
+            "script": ".build/release/App"
         }
     ]
 }
