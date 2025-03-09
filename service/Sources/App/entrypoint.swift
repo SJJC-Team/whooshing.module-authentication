@@ -38,10 +38,10 @@ enum Entrypoint {
                 case .api: Woo.api = app
                 #endif
                 #if HTTPS
-                case .https: Woo.inline = app
+                case .https: Woo.https = app
                 #endif
                 #if INLINE
-                case .inline: Woo.https = app
+                case .inline: Woo.inline = app
                 #endif
                 #if !(INLINE && HTTPS && API)
                 default: fatalError(Err.illegalService.d(service.rawValue, 20100, (#file, #line)).description)
