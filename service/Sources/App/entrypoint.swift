@@ -19,63 +19,61 @@ enum Entrypoint {
     }
     
     static func main() async throws {
-        var services: [Application.ServiceType] = []
+        var e = try Environment.detect()
+        try LoggingSystem.bootstrap(from: &e)
+        let env = e
         #if API
-        services.append(.api)
+        async let _ = runService(.api, env: env)
         #endif
         #if HTTPS
-        services.append(.https)
+        async let _ = runService(.https, env: env)
         #endif
         #if INLINE
-        services.append(.inline)
+        async let _ = runService(.inline, env: env)
         #endif
-        for service in services {
-            var env = try Environment.detect()
-            try LoggingSystem.bootstrap(from: &env)
-            let app = try await Application.make(env)
+    }
+
+    static func runService(_ service: Application.ServiceType, env: Environment) async throws {
+        let app = try await Application.make(env)
+        switch service {
+            #if API
+            case .api: await MainActor.run { Woo.api = app }
+            #endif
+            #if HTTPS
+            case .https: await MainActor.run { Woo.https = app }
+            #endif
+            #if INLINE
+            case .inline: await MainActor.run { Woo.inline = app }
+            #endif
+            #if !(INLINE && HTTPS && API)
+            default: fatalError(Err.illegalService.d(service.rawValue, 20100, (#file, #line)).description)
+            #endif
+        }
+        do {
             switch service {
                 #if API
-                case .api: Woo.api = app
+                case .api: try await app.configure(for: .api); try await Configuration.api(app)
                 #endif
                 #if HTTPS
-                case .https: Woo.https = app
+                case .https: try await app.configure(for: .https); try await Configuration.https(app)
                 #endif
                 #if INLINE
-                case .inline: Woo.inline = app
+                case .inline: try await app.configure(for: .inline); try await Configuration.inline(app)
                 #endif
                 #if !(INLINE && HTTPS && API)
-                default: fatalError(Err.illegalService.d(service.rawValue, 20100, (#file, #line)).description)
+                default: fatalError(Err.illegalService.d(service.rawValue, 20101, (#file, #line)).description)
                 #endif
             }
-            do {
-                try await app.configure(for: .https)
-                switch service {
-                    #if API
-                    case .api: try await Configuration.api(app)
-                    #endif
-                    #if HTTPS
-                    case .https: try await Configuration.https(app)
-                    #endif
-                    #if INLINE
-                    case .inline: try await Configuration.inline(app)
-                    #endif
-                    #if !(INLINE && HTTPS && API)
-                    default: fatalError(Err.illegalService.d(service.rawValue, 20101, (#file, #line)).description)
-                    #endif
-                }
-            } catch {
-                app.logger.report(error: error)
-                try? await app.asyncShutdown()
-                throw error
-            }
-            Task.detached {
-                do {
-                    try await app.execute()
-                    try await app.asyncShutdown()
-                } catch {
-                    print("Error: \(error)")
-                }
-            }
+        } catch {
+            app.logger.report(error: error)
+            try? await app.asyncShutdown()
+            throw error
+        }
+        do {
+            try await app.execute()
+            try await app.asyncShutdown()
+        } catch {
+            print("Error: \(error)")
         }
     }
 }

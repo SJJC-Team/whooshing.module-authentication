@@ -9,7 +9,7 @@ whooshing.module-authentication:
             https:
                 port: 1
                 pgDatabasePorts: [5]
-            path: "/root/projects/whooshing.module-authentication/service"
+            path: "/root/projects/whooshing.module-authentication/service/.build/x86_64-unknown-linux-gnu/release"
     shared_inline_module:
         port: 0
         pgDatabasePorts: [5]
