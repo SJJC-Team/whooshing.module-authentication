@@ -14,14 +14,15 @@ struct UserController: RouteCollection {
     func boot(routes: any RoutesBuilder) throws {
         let userRoute = routes.grouped("user")
         userRoute.post("register", use: register)
-        userRoute.post("login", use: login)
         userRoute.post("auth", use: authenticate)
+        let basicProtected = userRoute.grouped(User.authenticator())
+        basicProtected.post("login", use: login)
     }
     
     // 用户注册，若成功，返回 Registered 字符串
     @Sendable func register(req: Request) async throws -> String {
         // 验证注册者的请求是否合格，email + hashed password
-        try NewUser.validate(query: req)
+        try NewUser.validate(content: req)
         let newUser = try req.content.decode(NewUser.self)
         let user = try newUser.user()
         try await user.save(on: req.db)

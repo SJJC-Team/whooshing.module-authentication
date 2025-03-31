@@ -18,7 +18,7 @@ final class Token: PGModel, @unchecked Sendable {
         let credential = PGField("credential", .string, true)       .cons([.required])
         let token = PGField("token", .string, true)                 .cons([.required])
         let valid = PGField("valid", .bool).def(true)               .cons([.required])  // 是否有效
-        let expireAfter = PGField("expire_after", .uint32)          .cons([.required])  // 过期时间，单位为分
+        let expireAfter = PGField("expire_after", .int)            .cons([.required])  // 过期时间，单位为分
         let createdAt = PGField("create_at", .string)               .cons([.required])
     }
     
@@ -29,7 +29,7 @@ final class Token: PGModel, @unchecked Sendable {
     @Field(fields.credential)                                       var credential: String
     @Field(fields.token)                                            var token: String
     @Field(fields.valid)                                            var valid: Bool
-    @Field(fields.expireAfter)                                      var expireAfter: UInt32
+    @Field(fields.expireAfter)                                      var expireAfter: Int
     @Timestamp(fields.createdAt, on: .create)                       var createdAt: Date!
     
     init() {}
