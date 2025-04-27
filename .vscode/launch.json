@@ -19,7 +19,7 @@
             "preLaunchTask": "swift: Build Release App (inline)"
         },
         {
-            "type": "lldb",
+            "type": "swift",
             "request": "launch",
             "args": [],
             "cwd": "${workspaceFolder:whooshing.module-authentication}/service",
@@ -28,7 +28,7 @@
             "preLaunchTask": "swift: Build Debug App (service)"
         },
         {
-            "type": "lldb",
+            "type": "swift",
             "request": "launch",
             "args": [],
             "cwd": "${workspaceFolder:whooshing.module-authentication}/service",

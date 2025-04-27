@@ -7,8 +7,8 @@ let package = Package(
        .macOS(.v13)
     ],
     dependencies: [
-        .package(url: "https://github.com/SJJC-Team/whooshing-vapor.git", branch: "main"),
-        .package(url: "https://github.com/SJJC-Team/whooshing.toolbox-basic.git", branch: "1.1.11-developer-clwang-api-module"),
+        .package(path: "/root/projects/whooshing-vapor"),
+        .package(path: "~/projects/whooshing.toolbox-basic"),
         .package(url: "https://github.com/apple/swift-nio.git", from: "2.65.0"),
     ],
     targets: [
@@ -20,7 +20,7 @@ let package = Package(
                 .product(name: "NIOPosix", package: "swift-nio"),
                 .product(name: "Whooshing", package: "whooshing.toolbox-basic"),
             ],
-            swiftSettings: swiftSettings + ["HTTPS", "INLINE"].map { .define($0) }
+            swiftSettings: swiftSettings + ["HTTPS"].map { .define($0) }
         ),
         .testTarget(
             name: "AppTests",

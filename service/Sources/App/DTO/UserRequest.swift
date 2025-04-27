@@ -36,5 +36,5 @@ extension Token {
 
 struct TokenAuth: Content {
     let credential: String
-    let tokenHashed: Data
+    let tokenEncrypted: Data
 }

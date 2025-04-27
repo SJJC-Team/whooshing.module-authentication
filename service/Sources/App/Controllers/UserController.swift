@@ -41,28 +41,21 @@ struct UserController: RouteCollection {
     
     // 验证口令，若成功，返回用户口令
     @Sendable func authenticate(req: Request) async throws -> Crypto.Symm.Key {
-        enum AuthErr: String, Error {
-            case credentialNotExist = "用户凭据不存在"
-            case credentialExpired = "用户凭据已过期"
-            case tokenIncorrect = "用户口令不正确"
-            case tokenInvalid = "用户口令无效"
-            case tokenLengthIncorrect = "用户口令长度不正确"
-        }
         let tokenAuth = try req.content.decode(TokenAuth.self)
-        guard tokenAuth.tokenHashed.count == 64 else { throw AuthErr.tokenLengthIncorrect }
+        guard tokenAuth.tokenEncrypted.count == 60 else { throw Abort(.badRequest, reason: "用户口令长度不正确") }
         // 从数据库中查询用户凭据
-        guard let token = try await Token.query(on: req.db).filter(\.$credential == tokenAuth.credential).first() else { throw AuthErr.credentialNotExist }
+        guard let token = try await Token.query(on: req.db).filter(\.$credential == tokenAuth.credential).first() else { throw Abort(.badRequest, reason: "用户凭据不存在") }
         try await token.$user.load(on: req.db)
         // 检查是否有效
-        guard token.valid == true else { throw AuthErr.tokenInvalid }
+        guard token.valid == true else { throw Abort(.badRequest, reason: "用户口令无效")  }
         // 检查是否已过期
         let expireDate = token.createdAt.addingTimeInterval(TimeInterval(token.expireAfter * 60))
-        guard Date.now < expireDate else { throw AuthErr.credentialExpired }
+        guard Date.now < expireDate else { throw Abort(.badRequest, reason: "用户凭据已过期") }
         // 检查口令是否正确
-        let keyData = try Base64String(token.token).data()                                  // 取得密钥的字节码
-        let key = Crypto.Symm.Key(data: keyData)                                 // 转为 AES 密钥类型
-        let authData = try Crypto.hash(Crypto.Symm.encrypt(keyData, key: key))              // 使用密钥本身加密密钥，并进行 Hash
-        guard authData == tokenAuth.tokenHashed else { throw AuthErr.tokenIncorrect }             // 比对 hash 之后的密钥是否一致
+        let keyData = try Base64String(token.token).data()                                                     // 取得密钥的字节码
+        let key = Crypto.Symm.Key(data: keyData)                                                    // 转为 AES 密钥类型
+        let authData: Data = try Crypto.Symm.decrypt(tokenAuth.tokenEncrypted, key: key)                             // 解密 tokenEncrypted
+        guard keyData == authData else { throw Abort(.badRequest, reason: "用户口令不正确") }                           // key 是否一致
         return key
     }
 }

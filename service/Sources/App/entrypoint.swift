@@ -6,7 +6,7 @@ import Whooshing
 import ErrorHandle
 
 /// 该函数为入口函数，是整个 Vapor 服务的执行起始点
-/// 该函数根据环境变量(API, INLINE, HTTPS)分别设置服务类型，并进行初始化
+/// 该函数根据环境变量(API, HTTPS)分别设置服务类型，并进行初始化
 /// 环境变量可在 Package.swift 中设置
 /// 不同服务的 Application 实例可以分别通过 Woo.api, Woo.inline, Woo.https 来取得
 /// 要对不同的实例进行额外配置，在 configure.swift 进行额外配置
@@ -22,14 +22,20 @@ enum Entrypoint {
         var e = try Environment.detect()
         try LoggingSystem.bootstrap(from: &e)
         let env = e
+        try await runService(.inline, env: env)
         #if API
-        async let _ = runService(.api, env: env)
+        try await runService(.api, env: env)
         #endif
         #if HTTPS
-        async let _ = runService(.https, env: env)
+        try await runService(.https, env: env)
         #endif
-        #if INLINE
-        async let _ = runService(.inline, env: env)
+
+        async let _ = run(app: Woo.inline)
+        #if API
+        async let _ = run(app: Woo.api)
+        #endif
+        #if HTTPS
+        async let _ = run(app: Woo.https)
         #endif
     }
 
@@ -42,25 +48,21 @@ enum Entrypoint {
             #if HTTPS
             case .https: await MainActor.run { Woo.https = app }
             #endif
-            #if INLINE
             case .inline: await MainActor.run { Woo.inline = app }
-            #endif
-            #if !(INLINE && HTTPS && API)
+            #if !(HTTPS && API)
             default: fatalError(Err.illegalService.d(service.rawValue, 20100, (#file, #line)).description)
             #endif
         }
         do {
             switch service {
                 #if API
-                case .api: try await app.configure(for: .api); try await Configuration.api(app)
+                case .api: try await app.configure(for: .api, data: Woo.inline.inlineClient); app.http.server.configuration.hostname = "127.0.0.1"; try await Configuration.api(app)
                 #endif
                 #if HTTPS
-                case .https: try await app.configure(for: .https); try await Configuration.https(app)
+                case .https: try await app.configure(for: .https); app.http.server.configuration.hostname = "0.0.0.0"; try await Configuration.https(app)
                 #endif
-                #if INLINE
-                case .inline: try await app.configure(for: .inline); try await Configuration.inline(app)
-                #endif
-                #if !(INLINE && HTTPS && API)
+                case .inline: try await app.configure(for: .inline); app.http.server.configuration.hostname = "127.0.0.1"; try await Configuration.inline(app)
+                #if !(HTTPS && API)
                 default: fatalError(Err.illegalService.d(service.rawValue, 20101, (#file, #line)).description)
                 #endif
             }
@@ -69,11 +71,14 @@ enum Entrypoint {
             try? await app.asyncShutdown()
             throw error
         }
+    }
+
+    static func run(app: Application) async {
         do {
             try await app.execute()
             try await app.asyncShutdown()
-        } catch {
-            print("Error: \(error)")
+        } catch let err {
+            app.logger.report(error: err)
         }
     }
 }
@@ -86,7 +91,5 @@ struct Woo {
     #if HTTPS
     fileprivate(set) static var https: Application!
     #endif
-    #if INLINE
     fileprivate(set) static var inline: Application!
-    #endif
 }
