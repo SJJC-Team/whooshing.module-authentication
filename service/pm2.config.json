@@ -1,0 +1,9 @@
+{
+    "apps": [
+        {
+            "name": "whooshing.module-authentication",
+            "cwd": "./",
+            "script": "./App"
+        }
+    ]
+}

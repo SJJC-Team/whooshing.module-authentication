@@ -1,0 +1,15 @@
+---
+whooshing.module-authentication:
+    pgsql:
+        "default":
+            database: "woo"
+            port: 5
+    service_bundles:
+        "default":
+            https:
+                port: 1
+                pgDatabasePorts: [5]
+            path: "/root/projects/whooshing.module-authentication/service/.build/x86_64-unknown-linux-gnu/release"
+    shared_inline_module:
+        port: 0
+        pgDatabasePorts: [5]
