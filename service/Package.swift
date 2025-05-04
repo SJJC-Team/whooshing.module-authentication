@@ -7,8 +7,11 @@ let package = Package(
        .macOS(.v13)
     ],
     dependencies: [
-        .package(path: "/root/projects/whooshing-vapor"),
-        .package(path: "~/projects/whooshing.toolbox-basic"),
+        // 💧 Vapor -- Swift 服务器端第三方框架
+        .package(url: "https://github.com/SJJC-Team/whooshing-vapor.git", from: "1.0.0"),
+        // ⭐️ Whooshing 系统基本框架
+        .package(url: "https://github.com/SJJC-Team/whooshing.toolbox-basic.git", from: "1.2.0"),
+        // 🔵 Swift 高性能网络通讯模块
         .package(url: "https://github.com/apple/swift-nio.git", from: "2.65.0"),
     ],
     targets: [
