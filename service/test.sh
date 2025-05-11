@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -e
+
 ./deploy.sh
 
 export LOG_LEVEL=trace
