@@ -32,7 +32,7 @@ enum Entrypoint {
     /// 配置该服务模块是否接受运行在测试环境中，可将其改为 false
     /// 这样，若检测到环境为 testing 将会直接 fatalError
     /// 另请详见 ``Whooshing.Mode``
-    static let testingAllowed = true
+    static let testingAllowed = false
     
     static func main() async throws {
         

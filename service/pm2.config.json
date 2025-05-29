@@ -3,7 +3,7 @@
         {
             "name": "whooshing.module-authentication",
             "cwd": "./",
-            "script": "./App"
+            "script": "./App --env production"
         }
     ]
 }
