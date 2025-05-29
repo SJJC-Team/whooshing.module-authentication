@@ -1,0 +1,33 @@
+name: Release All Binaries
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  build-and-upload:
+    name: Build and Upload All Binaries
+    runs-on: ubuntu-noble
+    container: swift:6.0-noble
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Build and package wsm-ctl
+        working-directory: ./service
+        run: |
+          swift build --static-swift-stdlib -c release
+          ARCH=$(uname -m)
+          OS="ubuntu24.04"
+          OUTPUT="woo-module-authentication-${OS}-${ARCH}-static.tar.gz"
+          tar -czvf $OUTPUT -C .build/release App
+          mv $OUTPUT ../
+
+      - name: Upload binaries to GitHub Release
+        uses: softprops/action-gh-release@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.CLWANG_RELEASE_ACCESS }}
+        with:
+          files: |
+            woo-module-authentication-ubuntu24.04-*-static.tar.gz
