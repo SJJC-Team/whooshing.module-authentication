@@ -1,5 +1,5 @@
 ---
-whooshing.module-authentication:
+whooshing.sys-authentication:
     domain: "auth"
     pgsql:
         "default":
@@ -11,7 +11,7 @@ whooshing.module-authentication:
                 port: 1
                 pgDatabasePorts: [5]
                 domain: "api"
-            path: "/root/projects/whooshing.module-authentication/service/.build/x86_64-unknown-linux-gnu/release"
+            path: "./bundle"
     shared_inline_module:
         port: 0
         pgDatabasePorts: [5]
