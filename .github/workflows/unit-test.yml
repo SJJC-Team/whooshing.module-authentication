@@ -13,10 +13,10 @@ jobs:
     uses: SJJC-Team/ci/.github/workflows/run-unit-tests.yml@develop
     with:
       with_release_mode_testing: true
-      with_musl: true
+      with_musl: false
       with_api_check: false
       only_build: true
-      extra_musl_flags: --target whooshing.template-pgsql
+      extra_musl_flags: --target whooshing.sys-authentication
       ios_xcodebuild_action: ''
-      ios_scheme_name: whooshing.template-pgsql
+      ios_scheme_name: whooshing.sys-authentication
     secrets: inherit

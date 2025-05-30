@@ -14,7 +14,7 @@ enum WhooshingModuleType: String {
 }
 
 let package = Package(
-    name: "whooshing.template-pgsql",
+    name: "whooshing.sys-authentication",
     platforms: [
         .macOS(.v10_15),
         .iOS(.v14),
