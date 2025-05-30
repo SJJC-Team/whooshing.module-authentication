@@ -6,14 +6,14 @@ on:
 
 jobs:
   build-and-upload:
-    name: Build and Upload All Binaries
+    name: Release
     runs-on: ${{ matrix.os }}
     container: swift:${{ matrix.swift_version }}
 
     strategy:
       matrix:
         os: [ubuntu-22.04, ubuntu-24.04, macos-14, macos-15]
-        swift_version: [6.0, 6.1]
+        swift_version: ["6.0", "6.1"]
 
     steps:
       - name: Checkout code
