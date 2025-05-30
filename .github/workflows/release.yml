@@ -24,4 +24,4 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.CLWANG_RELEASE_ACCESS }}
         with:
           files: |
-            woo-module-authentication-ubuntu24.04-*-static.tar.gz
+            woo-sys-auth-ubuntu24.04-*-static.tar.gz
