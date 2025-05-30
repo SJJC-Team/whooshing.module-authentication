@@ -1,5 +1,7 @@
 #!/bin/bash
 
+SWIFT_VERSION=$1
+
 set - e
 
 name=$(sed -n '2p' "$(dirname "$0")/configure.yaml" | sed 's#[<>:"/\\|?*]#-#g' | sed 's/.$//')
@@ -58,11 +60,11 @@ OS="${OS_NAME_CLEAN}-${OS_VERSION_CLEAN}"
 
 swift build --static-swift-stdlib -c release
 ARCH=$(uname -m)
-OUTPUT="$name-${OS}-${ARCH}-static.tar.gz"
-mkdir -p module/bundle
-cp configure.yaml module/configure.yaml
-cp .build/release/App module/bundle/App
-cp -r .build/release/*.resources module/bundle/
-cp pm2.config.json module/bundle/pm2.config.json
-tar -czvf $OUTPUT module/
-mv $OUTPUT ../
+OUTPUT="$name-${OS}-${ARCH}-swift-${SWIFT_VERSION}-static.tar.gz"
+
+mkdir -p release/module/bundle
+cp configure.yaml release/module/configure.yaml
+cp .build/release/App release/module/bundle/App
+cp -r .build/release/*.resources release/module/bundle/
+cp pm2.config.json release/module/bundle/pm2.config.json
+tar -czvf release/$OUTPUT release/module/

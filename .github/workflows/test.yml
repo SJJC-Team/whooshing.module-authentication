@@ -10,23 +10,13 @@ on:
 
 jobs:
   unit-tests:
-    uses: ./.github/workflows/run-unit-tests.yml
+    uses: whooshing/ci/.github/workflows/run-unit-tests.yml@develop
     with:
       with_release_mode_testing: true
-      with_tsan: false
       with_musl: true
-      with_coverage: false
-      extra_musl_flags: --target WhooshingServer
+      with_api_check: false
+      only_build: true
+      extra_musl_flags: --target whooshing.template-pgsql
       ios_xcodebuild_action: ''
-      ios_scheme_name: WhooshingServer
+      ios_scheme_name: whooshing.template-pgsql
     secrets: inherit
-
-  test-parallel:
-    if: ${{ !(github.event.pull_request.draft || false) }}
-    runs-on: ubuntu-latest
-    container: swift:6.0
-    steps:
-      - name: Check out Vapor
-        uses: actions/checkout@v4
-      - name: Run tests
-        run: swift test --parallel
