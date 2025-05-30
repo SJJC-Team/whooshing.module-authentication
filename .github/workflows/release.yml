@@ -16,13 +16,7 @@ jobs:
 
       - name: Build and package wsm-ctl
         working-directory: ./service
-        run: |
-          swift build --static-swift-stdlib -c release
-          ARCH=$(uname -m)
-          OS="ubuntu24.04"
-          OUTPUT="woo-module-authentication-${OS}-${ARCH}-static.tar.gz"
-          tar -czvf $OUTPUT -C .build/release App
-          mv $OUTPUT ../
+        run: bash ./release.sh
 
       - name: Upload binaries to GitHub Release
         uses: softprops/action-gh-release@v2
