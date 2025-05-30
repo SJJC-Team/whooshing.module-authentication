@@ -35,7 +35,7 @@ jobs:
 
       - name: Build and package App
         run: |
-          bash ./release.sh ${{ matrix.xcode-version }}
+          bash ./release.sh xcode ${{ matrix.xcode-version }}
 
       - name: Upload binaries to GitHub Release
         uses: softprops/action-gh-release@v2

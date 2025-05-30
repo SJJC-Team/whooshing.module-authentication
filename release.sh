@@ -1,6 +1,7 @@
 #!/bin/bash
 
-SWIFT_VERSION=$1
+LABEL=$1
+SWIFT_VERSION=$2
 
 set - e
 
@@ -60,7 +61,7 @@ OS="${OS_NAME_CLEAN}-${OS_VERSION_CLEAN}"
 
 swift build --static-swift-stdlib -c release
 ARCH=$(uname -m)
-OUTPUT="$name-${OS}-${ARCH}-swift-${SWIFT_VERSION}-static.tar.gz"
+OUTPUT="$name-${OS}-${ARCH}-${LABEL}-${SWIFT_VERSION}.tar.gz"
 
 mkdir -p release/module/bundle
 cp configure.yaml release/module/configure.yaml
