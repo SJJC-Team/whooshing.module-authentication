@@ -50,7 +50,7 @@ struct UserController: RouteCollection {
         guard token.valid == true else { throw Abort(.badRequest, reason: "用户口令无效")  }
         // 检查是否已过期
         let expireDate = token.createdAt.addingTimeInterval(TimeInterval(token.expireAfter * 60))
-        guard Date.now < expireDate else { throw Abort(.badRequest, reason: "用户凭据已过期") }
+        guard Date() < expireDate else { throw Abort(.badRequest, reason: "用户凭据已过期") }
         // 检查口令是否正确
         let keyData = try Base64String(token.token).data()                                                          // 取得密钥的字节码
         let key = Crypto.Symm.Key(data: keyData)                                                                    // 转为 AES 密钥类型

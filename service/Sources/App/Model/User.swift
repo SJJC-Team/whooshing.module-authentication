@@ -13,6 +13,7 @@ final class User: PGModel, @unchecked Sendable {
     static let name: String = "users"
     
     struct Fields: PGFields {
+        static var tdeEncrypt: Bool { !Woo.isIndependentDebug }
         let id = PGField("id", .uuid)                               .cons([.required])
         let email = PGField("email", .string, true)                 .cons([.required])
         let hashedPasswd = PGField("hashed_passwd", .string)        .cons([.required])

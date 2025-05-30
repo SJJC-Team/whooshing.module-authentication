@@ -13,6 +13,7 @@ final class Token: PGModel, @unchecked Sendable {
     static let name: String = "tokens"
     
     struct Fields: PGFields {
+        static var tdeEncrypt: Bool { !Woo.isIndependentDebug }
         let id = PGField("id", .uuid)                               .cons([.required])
         let user = PGField("user_id", User.fields.id.dataType)      .cons([.required, .references(User.schema, User.fields.id.key)])
         let credential = PGField("credential", .string, true)       .cons([.required])
