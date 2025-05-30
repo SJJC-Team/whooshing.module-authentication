@@ -1,4 +1,4 @@
-name: test
+name: Unit Test
 permissions:
   contents: read
 concurrency:
@@ -10,7 +10,7 @@ on:
 
 jobs:
   unit-tests:
-    uses: whooshing/ci/.github/workflows/run-unit-tests.yml@develop
+    uses: SJJC-Team/ci/.github/workflows/run-unit-tests.yml@develop
     with:
       with_release_mode_testing: true
       with_musl: true

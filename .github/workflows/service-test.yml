@@ -1,4 +1,4 @@
-name: Authentication Service Workflow
+name: Service Testing Workflow
 
 on:
   push:
@@ -19,8 +19,8 @@ jobs:
       with:
         path: |
           ~/.swiftpm
-          service/.build
-        key: ${{ runner.os }}-service-swift-${{ hashFiles('service/Package.swift') }}
+          .build
+        key: ${{ runner.os }}-service-swift-${{ hashFiles('Package.swift') }}
         restore-keys: |
           ${{ runner.os }}-service-swift-
     
@@ -33,7 +33,7 @@ jobs:
         postgresql password: testing
 
     - name: Build-Service
-      run: cd service; swift build -v
+      run: swift build -v
 
     - name: Run tests-Service
-      run: cd service; swift test -v
+      run: swift test -v
