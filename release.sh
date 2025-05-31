@@ -59,7 +59,7 @@ OS="${OS_NAME_CLEAN}-${OS_VERSION_CLEAN}"
 
 # ------------------------------------------------
 
-# swift build --static-swift-stdlib -c release
+swift build --static-swift-stdlib -c release
 ARCH=$(uname -m)
 OUTPUT="$name-${OS}-${ARCH}-${LABEL}-${SWIFT_VERSION}.tar.gz"
 
