@@ -1,0 +1,8 @@
+name: Release Tag Workflow
+
+on:
+  workflow_dispatch:
+
+jobs:
+  release:
+    uses: SJJC-Team/ci/.github/workflows/release.yml@develop
