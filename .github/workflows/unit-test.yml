@@ -25,4 +25,5 @@ jobs:
       with_pg_database: "testing"
       with_pg_user: "testing"
       with_pg_password: "testing"
+      with_pg_port: "5432"
     secrets: inherit

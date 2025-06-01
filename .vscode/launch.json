@@ -1,0 +1,22 @@
+{
+    "configurations": [
+        {
+            "type": "swift",
+            "request": "launch",
+            "args": [],
+            "cwd": "${workspaceFolder:whooshing.module-authentication}",
+            "name": "Debug App",
+            "program": "${workspaceFolder:whooshing.module-authentication}/.build/debug/App",
+            "preLaunchTask": "swift: Build Debug App"
+        },
+        {
+            "type": "swift",
+            "request": "launch",
+            "args": [],
+            "cwd": "${workspaceFolder:whooshing.module-authentication}",
+            "name": "Release App",
+            "program": "${workspaceFolder:whooshing.module-authentication}/.build/release/App",
+            "preLaunchTask": "swift: Build Release App"
+        }
+    ]
+}
