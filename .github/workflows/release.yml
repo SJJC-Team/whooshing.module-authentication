@@ -1,11 +1,11 @@
-name: Release Tag Workflow
+name: Release and Package Workflow
 
 on:
   release:
     types: [published]
 
 jobs:
-  release-and-tag:
+  release-and-package:
     uses: SJJC-Team/ci/.github/workflows/release.yml@develop
     with:
       work_dir: "."
