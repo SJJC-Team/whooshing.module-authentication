@@ -3,15 +3,16 @@ whooshing.sys-authentication:
     domain: "auth"
     pgsql:
         "default":
-            database: "woo"
+            database: ["woo"]
             port: 5
     service_bundles:
         "default":
             https:
+                hostname: "localhost"
                 port: 1
-                pgDatabasePorts: [5]
+                pg_database_ports: [5]
                 domain: "api"
             path: "./bundle"
     shared_inline_module:
         port: 0
-        pgDatabasePorts: [5]
+        pg_database_ports: [5]

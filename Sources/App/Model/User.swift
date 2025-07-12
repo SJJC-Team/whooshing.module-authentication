@@ -13,14 +13,13 @@ final class User: PGModel, @unchecked Sendable {
     static let name: String = "users"
     
     struct Fields: PGFields {
-        static var tdeEncrypt: Bool { !Woo.isIndependentDebug }
-        let id = PGField("id", .uuid)                               .cons([.required])
-        let email = PGField("email", .string, true)                 .cons([.required])
-        let hashedPasswd = PGField("hashed_passwd", .string)        .cons([.required])
-        let key = PGField("key", .data)                             .cons([.required])
-        let salt = PGField("salt", .data)                           .cons([.required])
-        let createdAt = PGField("create_at", .string)               .cons([.required])
-        let updateAt = PGField("update_at", .string)                .cons([.required])
+        let id = PGField("id", .uuid)                               .primary
+        let email = PGField("email", .string)                       .required.unique
+        let hashedPasswd = PGField("hashed_passwd", .string)        .required
+        let key = PGField("key", .data)                             .required
+        let salt = PGField("salt", .data)                           .required
+        let createdAt = PGField("create_at", .string)               .required
+        let updateAt = PGField("update_at", .string)                .required
     }
     
     static let fields = Fields()
@@ -35,7 +34,13 @@ final class User: PGModel, @unchecked Sendable {
     
     init() {}
     
-    struct MIG: PGMigration, Sendable { typealias DataModel = User }
+    struct MIG: PGMigration, Sendable {
+        typealias DataModel = User
+        
+        var tdeEncrypt: Bool {
+            !Woo.isIndependentDebug
+        }
+    }
 }
 
 extension User: ModelAuthenticatable {
@@ -44,9 +49,9 @@ extension User: ModelAuthenticatable {
 
     func verify(password: String) throws -> Bool {
         // 客户端请求所提供的密码是 其对其用户明文密码进行单次哈希的结果
-        let passwd = try Base64String(password).data()
+        let passwd = try Base64String(password).dataRes.get()
         // 对客户端密码设置后置盐，并再次哈希
         let hashed = Crypto.hash(passwd + self.salt)
-        return try hashed == Base64String(self.hashedPasswd).data()
+        return try hashed == Base64String(self.hashedPasswd).dataRes.get()
     }
 }

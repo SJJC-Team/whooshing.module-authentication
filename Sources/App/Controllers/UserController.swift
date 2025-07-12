@@ -52,9 +52,9 @@ struct UserController: RouteCollection {
         let expireDate = token.createdAt.addingTimeInterval(TimeInterval(token.expireAfter * 60))
         guard Date() < expireDate else { throw Abort(.badRequest, reason: "用户凭据已过期") }
         // 检查口令是否正确
-        let keyData = try Base64String(token.token).data()                                                          // 取得密钥的字节码
-        let key = Crypto.Symm.Key(data: keyData)                                                                    // 转为 AES 密钥类型
-        let authData: Data = try Crypto.Symm.decrypt(tokenAuth.tokenEncrypted, key: key)                            // 解密 tokenEncrypted
+        let keyData = try Base64String(token.token).dataRes.get()                                                   // 取得密钥的字节码
+        let key = Crypto.Symm.Key.new(data: keyData)                                                                // 转为 AES 密钥类型
+        let authData: Data = try Crypto.Symm.decrypt(tokenAuth.tokenEncrypted, key: key).get()                      // 解密 tokenEncrypted
         guard keyData == authData else { throw Abort(.badRequest, reason: "用户口令不正确") }                          // key 是否一致
         return key
     }

@@ -13,14 +13,13 @@ final class Token: PGModel, @unchecked Sendable {
     static let name: String = "tokens"
     
     struct Fields: PGFields {
-        static var tdeEncrypt: Bool { !Woo.isIndependentDebug }
-        let id = PGField("id", .uuid)                               .cons([.required])
-        let user = PGField("user_id", User.fields.id.dataType)      .cons([.required, .references(User.schema, User.fields.id.key)])
-        let credential = PGField("credential", .string, true)       .cons([.required])
-        let token = PGField("token", .string, true)                 .cons([.required])
-        let valid = PGField("valid", .bool).def(true)               .cons([.required])  // 是否有效
-        let expireAfter = PGField("expire_after", .int)            .cons([.required])  // 过期时间，单位为分
-        let createdAt = PGField("create_at", .string)               .cons([.required])
+        let id = PGField("id", .uuid)                               .primary
+        let user = PGField("user_id", .uuid)                        .required.foreign(User.self, \.id, onDelete: .cascade)
+        let credential = PGField("credential", .string)             .required.unique
+        let token = PGField("token", .string)                       .required.unique
+        let valid = PGField("valid", .bool)                         .required.def(true)  // 是否有效
+        let expireAfter = PGField("expire_after", .int)             .required  // 过期时间，单位为分
+        let createdAt = PGField("create_at", .string)               .required
     }
     
     static let fields: Fields = Fields()
@@ -38,11 +37,16 @@ final class Token: PGModel, @unchecked Sendable {
     init(for userId: User.IDValue) throws {
         self.$user.id = userId
         self.credential = Crypto.randomDataGenerate(length: 16).base64EncodedString()
-        self.token = Crypto.Symm.makeKey().data().base64EncodedString()
+        self.token = Crypto.Symm.makeKey().data.base64EncodedString()
         self.expireAfter = 7 * 24 * 60      // 7 天，以分钟为单位
     }
     
-    struct MIG: PGMigration, Sendable { typealias DataModel = Token }
+    struct MIG: PGMigration, Sendable {
+        typealias DataModel = Token
+        var tdeEncrypt: Bool {
+            !Woo.isIndependentDebug
+        }
+    }
 }
 
 extension Token: ModelCredentialsAuthenticatable {
